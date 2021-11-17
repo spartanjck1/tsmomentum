@@ -1,0 +1,18 @@
+import pandas as pd
+import yfinance as fd
+import numpy as np
+
+df = yf.download('AAPL', start='2020-08-01)
+
+def strategy(df, window=1):
+  df = df.copy()
+  df['ret'] = np.log(df.Close.pct_chage() + 1)
+  df['prior_n'] = df.ret.rolling(window).sum()
+  df.dropna(inplace=True)
+  df['position'] = [1 if i > 0 else -1 for i in df.prior_n]
+  df['strat'] = df.position.shift(1) * df.return
+  return np.exp(df[['ret', 'strat']].cumsum().plot(figsize=(12,6))
+  
+strategy(df)
+  
+  
